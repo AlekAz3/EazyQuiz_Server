@@ -2,6 +2,9 @@
 using EazyQuiz_Server.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace EazyQuiz_Server.Controllers
 {
@@ -51,15 +54,16 @@ namespace EazyQuiz_Server.Controllers
         {
             var ques = _context.questions.Find(id_question);
 
-            return new JsonResult(Ok(ques));
+            return new JsonResult(ques);
         }
 
         [HttpGet]
         public JsonResult Get_Answer(int id_question)
         {
-            var answ = _context.answers.Where(x => x.id_question == id_question);
 
-            return new JsonResult(Ok(answ));
+            var answ = _context.answers.Where(x => x.id_question == id_question).ToList();
+
+            return new JsonResult(answ);
         }
 
     }
