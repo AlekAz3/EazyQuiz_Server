@@ -66,5 +66,31 @@ namespace EazyQuiz_Server.Controllers
             return new JsonResult(answ);
         }
 
+        [HttpPost]
+        public IActionResult Post_u_a(user_answers answ)
+        {
+            answ.id = _context.user_answers.Count() == 0 ? 1 : _context.user_answers.Max(x => x.id) + 1;
+            _context.user_answers.Add(answ);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(Get_User_answer), new { id = answ.id }, answ);
+        }
+
+
+        [HttpPost]
+        public IActionResult Post_User_answer([FromBody] user_answers user_a) => Post_u_a(user_a);
+
+        [HttpGet]
+        public IActionResult Get_User_answer(int id)
+        {
+            var u_a = _context.user_answers.SingleOrDefault(x => x.id == id);
+            if (u_a == null)
+            {
+                return NotFound();
+            }
+            return Ok(u_a);
+
+        }
+        private int Next_User_answer_id() => _context.user_answers.Count()== 0 ? 1 : _context.user_answers.Max(x => x.id) + 1;
+
     }
 }
